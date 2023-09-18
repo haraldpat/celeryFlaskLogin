@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  
+  # database service
+  db:
+    image: mongo:3.6
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/mongodb:/data/db
+    command: --smallfiles
+
+  # for redis
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  simple_worker:
+    build: './simple_worker'
+    depends_on:
+      - redis
+
+  # web service for flask application
+  web:
+    build: './src'
+    image: flask-scaffolding:assessment
+    env_file:
+      local.env
+    command: >
+      /bin/ash -c "
+        flask run --host=0.0.0.0
+      "
+    volumes:
+      - ./src/:/code
+      - ./logs:/var/log/scaffolding
+    ports:
+      - "8400:5000"
+    depends_on:
+      - db
+      - redis
+      - simple_worker
+  
+
+  
+
+
+
+
+

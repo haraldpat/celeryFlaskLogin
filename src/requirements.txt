@@ -1,0 +1,8 @@
+Flask
+gunicorn==19.7.1
+ipdb==0.10.3
+mongoengine
+protobuf==3.6.0
+requests
+bcrypt
+celery[redis]
